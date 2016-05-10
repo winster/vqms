@@ -98,7 +98,6 @@ function initialiseState() {
 
         // Set your UI to show they have subscribed for  
         // push messages  
-        pushButton.textContent = 'Unsubscribe';  
         isPushEnabled = true;  
       })  
       .catch(function(err) {  
