@@ -1,3 +1,57 @@
+// This is called with the results from from FB.getLoginStatus().
+function statusChangeCallback(response) {
+  console.log('statusChangeCallback');
+  console.log(response);
+  // The response object is returned with a status field that lets the
+  // app know the current login status of the person.
+  // Full docs on the response object can be found in the documentation
+  // for FB.getLoginStatus().
+  if (response.status === 'connected') {
+    // Logged into your app and Facebook.
+    testAPI();
+  } else if (response.status === 'not_authorized') {
+    // The person is logged into Facebook, but not your app.
+    document.getElementById('status').innerHTML = 'Please log ' +
+      'into this app.';
+  } else {
+    // The person is not logged into Facebook, so we're not sure if
+    // they are logged into this app or not.
+    document.getElementById('status').innerHTML = 'Please log ' +
+      'into Facebook.';
+  }
+}
+
+// This function is called when someone finishes with the Login
+// Button.  See the onlogin handler attached to it in the sample
+// code below.
+function checkLoginState() {
+  FB.getLoginStatus(function(response) {
+    statusChangeCallback(response);
+  });
+}
+
+
+// Here we run a very simple test of the Graph API after login is
+// successful.  See statusChangeCallback() for when this call is made.
+function testAPI() {
+  console.log('Welcome!  Fetching your information.... ');
+  FB.api('/me', function(response) {
+    console.log('Successful login for: ' + response.name);
+    
+    var data = {};
+    data.name=response.name;
+    localStorage.setItem("regInput", JSON.stringify(data));
+
+    if (isPushEnabled) {  
+      unsubscribe();  
+    } else {  
+      subscribe();  
+    }  
+
+  });
+}
+
+
 var isPushEnabled = false;
 
 // Once the service worker is registered set the initial state  
@@ -30,7 +84,7 @@ function initialiseState() {
       .then(function(subscription) {  
         // Enable any UI which subscribes / unsubscribes from  
         // push messages.  
-        var pushButton = document.querySelector('.js-push-button');  
+        var pushButton = document.querySelector('.fb-login-button');  
         pushButton.disabled = false;
 
         if (!subscription) {  
@@ -54,19 +108,7 @@ function initialiseState() {
 }
 
 window.addEventListener('load', function() {  
-  var pushButton = document.querySelector('.js-push-button');  
-  var resetButton = document.querySelector('.reset-button');  
-  pushButton.addEventListener('click', function() {  
-    if (isPushEnabled) {  
-      unsubscribe();  
-    } else {  
-      subscribe();  
-    }  
-  });
-  resetButton.addEventListener('click', function() {  
-    unsubscribe();
-  });
-
+  
   // Check that service workers are supported, if so, progressively  
   // enhance and add push messaging support, otherwise continue without it.  
   if ('serviceWorker' in navigator) {  
@@ -143,20 +185,14 @@ function getQueryVariable(variable) {
 function subscribe() {  
   // Disable the button so it can't be changed while  
   // we process the permission request  
-  var pushButton = document.querySelector('.js-push-button');  
+  var pushButton = document.querySelector('.fb-login-button');  
   pushButton.disabled = true;
-
-  var data = {};
-  data.lname=document.querySelector("#lname").value;
-  data.recloc=document.querySelector("#recloc").value;
-  localStorage.setItem("regInput", JSON.stringify(data));
 
   navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {  
     serviceWorkerRegistration.pushManager.subscribe({userVisibleOnly:true})  
       .then(function(subscription) {  
         // The subscription was successful  
         isPushEnabled = true;  
-        pushButton.textContent = 'Unsubscribe';  
         pushButton.disabled = false;
 
         // TODO: Send the subscription.endpoint to your server  
@@ -177,14 +213,13 @@ function subscribe() {
           // gcm_user_visible_only in the manifest.  
           console.error('Unable to subscribe to push.', e);  
           pushButton.disabled = false;  
-          pushButton.textContent = 'Register';  
         }  
       });  
   });  
 }
 
 function unsubscribe() {  
-  var pushButton = document.querySelector('.js-push-button');  
+  var pushButton = document.querySelector('.fb-login-button');  
   pushButton.disabled = true;
 
   navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {  
@@ -198,7 +233,6 @@ function unsubscribe() {
           // to allow the user to subscribe to push  
           isPushEnabled = false;  
           pushButton.disabled = false;  
-          pushButton.textContent = 'Register';  
           return;  
         }  
 
@@ -210,7 +244,6 @@ function unsubscribe() {
         // We have a subscription, so call unsubscribe on it  
         pushSubscription.unsubscribe().then(function(successful) {  
           pushButton.disabled = false;  
-          pushButton.textContent = 'Register';  
           isPushEnabled = false;  
 
           return sendUnsubscriptionToServer(pushSubscription);  
@@ -223,7 +256,6 @@ function unsubscribe() {
 
           console.log('Unsubscription error: ', e);  
           pushButton.disabled = false;
-          pushButton.textContent = 'Register';
         });  
       }).catch(function(e) {  
         console.error('Error thrown while unsubscribing from push messaging.', e);  
@@ -238,7 +270,7 @@ function sendSubscriptionToServer(subscription){
   regInput.endpoint = subscription.endpoint;
   httprequest("/register", JSON.stringify(regInput), true);
   var titleTpl = document.querySelector('.title').innerHTML;
-  document.querySelector('.title').innerHTML = titleTpl.replace('#lname', regInput.lname);
+  document.querySelector('.title').innerHTML = titleTpl.replace('#name', regInput.name);
 }
 
 function sendUnsubscriptionToServer(subscription){
