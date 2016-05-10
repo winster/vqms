@@ -1,0 +1,170 @@
+<html>
+  <head>
+    <title>Virtual Queue Management System</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="title" content="Virtual Queue Management">
+    <meta name="keywords" content="We offer hassle free queue experience" />
+    <link rel="manifest" href="/manifest.json">
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/main.css">    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/3.3.0/css/swiper.min.css">
+  </head>
+
+  <body>
+    <script>
+      // This is called with the results from from FB.getLoginStatus().
+      function statusChangeCallback(response) {
+        console.log('statusChangeCallback');
+        console.log(response);
+        // The response object is returned with a status field that lets the
+        // app know the current login status of the person.
+        // Full docs on the response object can be found in the documentation
+        // for FB.getLoginStatus().
+        if (response.status === 'connected') {
+          // Logged into your app and Facebook.
+          testAPI();
+        } else if (response.status === 'not_authorized') {
+          // The person is logged into Facebook, but not your app.
+          document.getElementById('status').innerHTML = 'Please log ' +
+            'into this app.';
+        } else {
+          // The person is not logged into Facebook, so we're not sure if
+          // they are logged into this app or not.
+          document.getElementById('status').innerHTML = 'Please log ' +
+            'into Facebook.';
+        }
+      }
+
+      // This function is called when someone finishes with the Login
+      // Button.  See the onlogin handler attached to it in the sample
+      // code below.
+      function checkLoginState() {
+        FB.getLoginStatus(function(response) {
+          statusChangeCallback(response);
+        });
+      }
+
+      window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '{your-app-id}',
+        cookie     : true,  // enable cookies to allow the server to access 
+                            // the session
+        xfbml      : true,  // parse social plugins on this page
+        version    : 'v2.5' // use graph api version 2.5
+      });
+
+      // Now that we've initialized the JavaScript SDK, we call 
+      // FB.getLoginStatus().  This function gets the state of the
+      // person visiting this page and can return one of three states to
+      // the callback you provide.  They can be:
+      //
+      // 1. Logged into your app ('connected')
+      // 2. Logged into Facebook, but not your app ('not_authorized')
+      // 3. Not logged into Facebook and can't tell if they are logged into
+      //    your app or not.
+      //
+      // These three cases are handled in the callback function.
+
+      FB.getLoginStatus(function(response) {
+        statusChangeCallback(response);
+      });
+
+      };
+
+      // Load the SDK asynchronously
+      (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+      }(document, 'script', 'facebook-jssdk'));
+
+      // Here we run a very simple test of the Graph API after login is
+      // successful.  See statusChangeCallback() for when this call is made.
+      function testAPI() {
+        console.log('Welcome!  Fetching your information.... ');
+        FB.api('/me', function(response) {
+          console.log('Successful login for: ' + response.name);
+          document.getElementById('status').innerHTML =
+            'Thanks for logging in, ' + response.name + '!';
+        });
+      }
+    </script>
+    <div class="container content">
+      <header>
+        <h2>VQMS</h2>
+        <span class="hidden">**Hassle Free Queue Experience**Save your time**Know your nearby much better**</span>
+        <div>
+          <span class="pull-left title hidden">Hello #lname</span>
+          <button class="btn btn-warning reset-button pull-right hidden" type="button">Reset</button>
+        </div>
+        <br>
+        <hr>
+      </header>
+      <div class="container">
+        <div class="register">
+          <div class="form-group">
+              <input type="text" id="lname" class="form-control" placeholder="Enter your mobile number" value=""></input>
+          </div>
+          <div class="form-group">
+              <input type="text" id="recloc" class="form-control" placeholder="Enter OTP" value=""></input>
+          </div>
+          <div class="row">  
+            <div class="span4 offset4 text-center">
+              <button class="btn btn-large btn-success js-push-button" type="button" disabled>Register</button>
+            </div>
+          </div>
+          <hr/>
+          <div class="row center">OR</div>
+          <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
+          </fb:login-button>
+
+          <div id="status">
+          </div>
+        </div>
+        <div class="queue hidden">
+          <h2><span class="queuetoken">Token # <span id="queuetoken" class="queueatr"></span> </span></h2>
+          <h2><span id="queuerank" class="queueatr"></span> to go</h2>
+          <h2><span id="queuetime" class="queueatr"></span> minutes left</h2>
+        </div>
+        <div class="welcome hidden">
+          <div>
+            <span>Thanks! You are being redirected to entity's website</span>
+          </div>
+        </div>
+        <div class="promos hidden">
+          <hr/>
+          <h3>Promotions</h3>
+          <!-- Slider main container -->
+          <div class="swiper-container">
+              <!-- Additional required wrapper -->
+              <div class="swiper-wrapper">
+              </div>
+              <!-- If we need pagination -->
+              <div class="swiper-pagination"></div>
+              
+              <!-- If we need navigation buttons -->
+              <div class="swiper-button-prev"></div>
+              <div class="swiper-button-next"></div>
+              
+              <!-- If we need scrollbar -->
+              <div class="swiper-scrollbar"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script type="text/javascript" src="js/handlebars.js"></script>   
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/3.3.0/js/swiper.min.js"></script>
+    <script type="text/javascript" src="js/app.js"></script>    
+    
+    <script id="entry-template" type="text/x-handlebars-template">
+      <div class="swiper-slide">
+        <span>{{title}}</span>
+        <img src={{url}}>
+      </div>
+    </script> 
+  </body>
+</html>

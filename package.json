@@ -1,0 +1,21 @@
+{
+  "name": "VirtualQueueManagementSystem",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "*",
+    "node-localstorage":"*",
+    "body-parser":"*",
+    "node-gcm":"*",
+    "ws": "0.4.x",
+    "firebase":"*",
+    "q":"*",
+    "soap":"*"
+  }
+}
