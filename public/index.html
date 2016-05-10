@@ -51,11 +51,22 @@
         <div>
           <span class="pull-left title hidden">Hello #name</span>
           <div class="fb-login-button" data-max-rows="1" data-size="xlarge" data-show-faces="true" data-auto-logout-link="true" scope="public_profile,email" onlogin="checkLoginState();"></div>
+          <button class="btn btn-warning reset-button pull-right hidden" type="button">Reset</button>
         </div>
         <br>
         <hr>
       </header>
       <div class="container">
+        <div class="register">
+          <div class="form-group">
+              <input type="text" id="name" class="form-control" placeholder="Enter your name" value=""></input>
+          </div>
+          <div class="row">  
+            <div class="span4 offset4 text-center">
+              <button class="btn btn-large btn-success js-push-button" type="button" disabled>Register</button>
+            </div>
+          </div>
+        </div>
         <div class="queue hidden">
           <h2><span class="queuetoken">Token # <span id="queuetoken" class="queueatr"></span> </span></h2>
           <h2><span id="queuerank" class="queueatr"></span> to go</h2>
