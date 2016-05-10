@@ -54,7 +54,7 @@ app.post('/register', function(request, response) {
   var result={};
   var req = request.body;
   console.log(req);
-  if(!req.recloc || !req.lname) {
+  if(!req.name) {
     response.send({'result':'invalid input'});
     return;
   }
