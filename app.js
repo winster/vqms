@@ -61,7 +61,7 @@ app.post('/register', function(request, response) {
   var endpointParts=req.endpoint.split('/');
   var registrationId = endpointParts[endpointParts.length - 1];  
   req.regId = registrationId;
-  var profileRef = profilesRef.child(req.recloc);
+  var profileRef = profilesRef.child(req.name);
 
   broadcastAds();
 
@@ -101,7 +101,7 @@ app.post('/unregister', function(request, response) {
   });
   profilesRef.once('value', function(snapshot){
     var profiles = snapshot.val();
-    delete profiles[req.recloc];
+    delete profiles[req.name];
     profilesRef.set(profiles);
   });  
   response.send({'result':'success'});
